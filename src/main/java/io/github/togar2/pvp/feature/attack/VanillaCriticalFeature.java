@@ -42,9 +42,7 @@ public class VanillaCriticalFeature implements CriticalFeature {
 		double fallDistance = attacker.hasTag(VanillaFallFeature.FALL_DISTANCE)
 				? attacker.getTag(VanillaFallFeature.FALL_DISTANCE) : 0;
 		boolean inWater = attacker instanceof Player player && FluidUtil.isTouchingWater(player);
-		boolean mobilityRestricted = attacker.hasEffect(PotionEffect.BLINDNESS)
-				|| attacker.hasEffect(PotionEffect.SLOW_FALLING)
-				|| attacker.hasEffect(PotionEffect.LEVITATION);
+		boolean mobilityRestricted = attacker.hasEffect(PotionEffect.BLINDNESS);
 
 		boolean critical = values.strong() && !playerStateFeature.isClimbing(attacker)
 				&& fallDistance > 0 && !attacker.isOnGround()
