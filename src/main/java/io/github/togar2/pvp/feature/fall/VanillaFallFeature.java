@@ -161,7 +161,7 @@ public class VanillaFallFeature implements FallFeature, RegistrableFeature {
 	@Override
 	public int getFallDamage(LivingEntity entity, double fallDistance) {
 		double safeFallDistance = entity.getAttributeValue(Attribute.SAFE_FALL_DISTANCE);
-		return (int) Math.ceil((fallDistance - safeFallDistance) * entity.getAttributeValue(Attribute.FALL_DAMAGE_MULTIPLIER));
+		return (int) Math.floor((fallDistance - safeFallDistance) * entity.getAttributeValue(Attribute.FALL_DAMAGE_MULTIPLIER));
 	}
 	
 	@Override
