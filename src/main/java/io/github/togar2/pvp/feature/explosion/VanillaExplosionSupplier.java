@@ -60,6 +60,7 @@ public final class VanillaExplosionSupplier implements ExplosionSupplier {
 			protected List<Point> prepare(Instance instance) {
 				List<Point> blocks = new ArrayList<>();
 				ThreadLocalRandom random = ThreadLocalRandom.current();
+				double doubleRadius = this.getStrength() * 2.0F;
 
 				boolean breakBlocks = true;
 				if (additionalData != null && additionalData.keySet().contains("breakBlocks"))
@@ -77,13 +78,13 @@ public final class VanillaExplosionSupplier implements ExplosionSupplier {
 									xLength /= length;
 									yLength /= length;
 									zLength /= length;
-									double centerX = this.getCenterX();
-									double centerY = this.getCenterY();
-									double centerZ = this.getCenterZ();
+									double rayX = this.getCenterX();
+									double rayY = this.getCenterY();
+									double rayZ = this.getCenterZ();
 
 									float strengthLeft = this.getStrength() * (0.7F + random.nextFloat() * 0.6F);
-									for (; strengthLeft > 0.0F; strengthLeft -= 0.225F) {
-										Vec position = new Vec(centerX, centerY, centerZ);
+									for (; strengthLeft > 0.0F; strengthLeft -= 0.22500001F) {
+										Vec position = new Vec(rayX, rayY, rayZ);
 										Block block = instance.getBlock(position);
 
 										if (!block.isAir()) {
@@ -92,15 +93,13 @@ public final class VanillaExplosionSupplier implements ExplosionSupplier {
 
 											if (strengthLeft > 0.0F) {
 												Vec blockPosition = position.apply(Vec.Operator.FLOOR);
-												if (!blocks.contains(blockPosition)) {
-													blocks.add(blockPosition);
-												}
+												blocks.add(blockPosition);
 											}
 										}
 
-										centerX += xLength * 0.30000001192092896D;
-										centerY += yLength * 0.30000001192092896D;
-										centerZ += zLength * 0.30000001192092896D;
+										rayX += xLength * 0.30000001192092896D;
+										rayY += yLength * 0.30000001192092896D;
+										rayZ += zLength * 0.30000001192092896D;
 									}
 								}
 							}
@@ -108,7 +107,7 @@ public final class VanillaExplosionSupplier implements ExplosionSupplier {
 					}
 				}
 
-				double strength = this.getStrength() * 2.0F;
+				double strength = doubleRadius;
 				int minX_ = (int) Math.floor(this.getCenterX() - strength - 1.0D);
 				int maxX_ = (int) Math.floor(this.getCenterX() + strength + 1.0D);
 				int minY_ = (int) Math.floor(this.getCenterY() - strength - 1.0D);
@@ -156,25 +155,25 @@ public final class VanillaExplosionSupplier implements ExplosionSupplier {
 				damageObj = explosionEvent.getDamageObject();
 
 				for (Entity entity : entities) {
-					double currentStrength = entity.getPosition().distance(centerPoint) / strength;
-					if (currentStrength <= 1.0D) {
+					double distance = entity.getPosition().distance(centerPoint) / doubleRadius;
+					if (distance <= 1.0D) {
 						double dx = entity.getPosition().x() - this.getCenterX();
 						double dy = (entity.getEntityType() == EntityType.TNT ? entity.getPosition().y() :
 								entity.getPosition().y() + entity.getEyeHeight()) - this.getCenterY();
 						double dz = entity.getPosition().z() - this.getCenterZ();
-						double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-						if (distance != 0.0D) {
-							dx /= distance;
-							dy /= distance;
-							dz /= distance;
+						double distanceMag = Math.sqrt(dx * dx + dy * dy + dz * dz);
+						if (distanceMag != 0.0D) {
+							dx /= distanceMag;
+							dy /= distanceMag;
+							dz /= distanceMag;
 							double exposure = getExposure(centerPoint, entity);
-							currentStrength = (1.0D - currentStrength) * exposure;
-							damageObj.setAmount((float) ((currentStrength * currentStrength + currentStrength)
-									/ 2.0D * 7.0D * strength + 1.0D));
-							double knockback = currentStrength;
+							double damageStrength = (1.0D - distance) * exposure;
+							damageObj.setAmount((float) ((damageStrength * damageStrength + damageStrength)
+									/ 2.0D * 7.0D * doubleRadius + 1.0D));
+							double knockback = damageStrength;
 							if (entity instanceof LivingEntity living) {
 								if (!living.damage(damageObj)) continue;
-								knockback = enchantmentFeature.getExplosionKnockback(living, currentStrength);
+								knockback = enchantmentFeature.getExplosionKnockback(living, damageStrength);
 							}
 
 							Vec knockbackVec = new Vec(
@@ -183,16 +182,15 @@ public final class VanillaExplosionSupplier implements ExplosionSupplier {
 									dz * knockback
 							);
 
-							int tps = ServerFlag.SERVER_TICKS_PER_SECOND;
 							if (entity instanceof Player player) {
 								if (!player.getGameMode().invulnerable() && !player.isFlying()) {
 									playerKnockback.put(player, knockbackVec);
 
 									if (player instanceof CombatPlayer custom)
-										custom.setVelocityNoUpdate(velocity -> velocity.add(knockbackVec.mul(tps)));
+										custom.setVelocityNoUpdate(velocity -> velocity.add(knockbackVec));
 								}
 							} else {
-								entity.setVelocity(entity.getVelocity().add(knockbackVec.mul(tps)));
+								entity.setVelocity(entity.getVelocity().add(knockbackVec));
 							}
 						}
 					}
