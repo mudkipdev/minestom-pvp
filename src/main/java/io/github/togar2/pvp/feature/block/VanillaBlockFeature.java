@@ -99,8 +99,8 @@ public class VanillaBlockFeature implements BlockFeature {
 		if (damageBlockEvent.isCancelled()) return false;
 		damage.setAmount(damageBlockEvent.getResultingDamage());
 		
-		if (amount >= 3) {
-			int shieldDamage = 1 + (int) Math.floor(amount);
+		if (amount >= 1) {
+			int shieldDamage = (int) Math.floor(amount);
 			PlayerHand hand = ((LivingEntityMeta) entity.getEntityMeta()).getActiveHand();
 			itemDamageFeature.damageEquipment(
 					entity,
@@ -130,9 +130,9 @@ public class VanillaBlockFeature implements BlockFeature {
 		if (applyKnockback) {
 			Pos entityPos = entity.getPosition();
 			Pos attackerPos = attacker.getPosition();
-			attacker.takeKnockback(0.5F,
-					attackerPos.x() - entityPos.x(),
-					attackerPos.z() - entityPos.z()
+			entity.takeKnockback(0.5F,
+					entityPos.x() - attackerPos.x(),
+					entityPos.z() - attackerPos.z()
 			);
 		}
 		
