@@ -138,7 +138,7 @@ public class VanillaTridentFeature implements TridentFeature, RegistrableFeature
 				h * (n / length),
 				k * (n / length),
 				l * (n / length)
-		).mul(ServerFlag.SERVER_TICKS_PER_SECOND)));
+		)));
 		
 		SoundEvent soundEvent = level >= 3 ? SoundEvent.ITEM_TRIDENT_RIPTIDE_3 :
 				(level == 2 ? SoundEvent.ITEM_TRIDENT_RIPTIDE_2 : SoundEvent.ITEM_TRIDENT_RIPTIDE_1);
