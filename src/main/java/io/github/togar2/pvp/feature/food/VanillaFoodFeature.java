@@ -160,7 +160,7 @@ public class VanillaFoodFeature implements FoodFeature, RegistrableFeature {
 	public void eat(Player player, ItemStack stack) {
 		Food foodComponent = stack.get(DataComponents.FOOD);
 		if (foodComponent == null) return;
-		addFood(player, foodComponent.nutrition(), foodComponent.saturationModifier());
+		addFood(player, foodComponent.nutrition(), (float) foodComponent.nutrition() * foodComponent.saturationModifier() * 2.0f);
 	}
 	
 	@Override
