@@ -50,14 +50,14 @@ public class VanillaPlayerStateFeature implements PlayerStateFeature, Registrabl
 	@Override
 	public boolean isClimbing(LivingEntity entity) {
 		if (entity instanceof Player player && player.getGameMode() == GameMode.SPECTATOR) return false;
-		
+
 		var tag = MinecraftServer.process().blocks().getTag(Key.key("minecraft:climbable"));
 		assert tag != null;
-		
+
 		Block block = Objects.requireNonNull(entity.getInstance()).getBlock(entity.getPosition());
 		var key = block.asKey();
 		assert key != null;
-		return tag.contains(key);
+		return tag.contains(key) || block.compare(Block.POWDER_SNOW);
 	}
 	
 	@Override
