@@ -126,8 +126,7 @@ public class CustomEntityProjectile extends Entity {
 		dy += random.nextGaussian() * spread;
 		dz += random.nextGaussian() * spread;
 		
-		final double mul = ServerFlag.SERVER_TICKS_PER_SECOND * power;
-		this.velocity = new Vec(dx * mul, dy * mul, dz * mul);
+		this.velocity = new Vec(dx * power, dy * power, dz * power);
 		setView(
 				(float) Math.toDegrees(Math.atan2(dx, dz)),
 				(float) Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)))
