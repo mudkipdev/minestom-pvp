@@ -50,10 +50,15 @@ public class VanillaSweepingFeature implements SweepingFeature {
 	@Override
 	public boolean shouldSweep(LivingEntity attacker, AttackValues.PreSweeping values) {
 		if (!values.strong() || values.critical() || values.sprint() || !attacker.isOnGround()) return false;
-		
-		double lastMoveDistance = attacker.getPreviousPosition().distance(attacker.getPosition()) * 0.6;
-		if (lastMoveDistance >= attacker.getAttributeValue(Attribute.MOVEMENT_SPEED)) return false;
-		
+
+		Pos prev = attacker.getPreviousPosition();
+		Pos curr = attacker.getPosition();
+		double dx = curr.x() - prev.x();
+		double dz = curr.z() - prev.z();
+		double horizontalDistanceSq = dx * dx + dz * dz;
+		double maxSpeed = attacker.getAttributeValue(Attribute.MOVEMENT_SPEED) * 2.5;
+		if (horizontalDistanceSq >= maxSpeed * maxSpeed) return false;
+
 		Tool tool = Tool.fromMaterial(attacker.getItemInMainHand().material());
 		return tool != null && tool.isSword();
 	}
