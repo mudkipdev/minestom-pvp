@@ -78,12 +78,13 @@ public class VanillaExhaustionFeature implements ExhaustionFeature, RegistrableF
 	
 	protected void onMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		
+
 		double xDiff = event.getNewPosition().x() - player.getPosition().x();
 		double yDiff = event.getNewPosition().y() - player.getPosition().y();
 		double zDiff = event.getNewPosition().z() - player.getPosition().z();
-		
-		// Check if movement was a jump
+
+		double distance = Math.sqrt(xDiff * xDiff + zDiff * zDiff);
+
 		if (yDiff > 0.0D && player.isOnGround()) {
 			if (player.isSprinting()) {
 				addExhaustion(player, version.legacy() ? 0.8f : 0.2f);
@@ -91,14 +92,17 @@ public class VanillaExhaustionFeature implements ExhaustionFeature, RegistrableF
 				addExhaustion(player, version.legacy() ? 0.2f : 0.05f);
 			}
 		}
-		
+
 		if (player.isOnGround()) {
-			int l = (int) Math.round(Math.sqrt(xDiff * xDiff + zDiff * zDiff) * 100.0f);
-			if (l > 0) addExhaustion(player, (player.isSprinting() ? 0.1f : 0.0f) * (float) l * 0.01f);
+			if (distance > 0) {
+				addExhaustion(player, (player.isSprinting() ? 0.1f : 0.0f) * (float) distance);
+			}
 		} else {
 			if (Objects.requireNonNull(player.getInstance()).getBlock(player.getPosition()) == Block.WATER) {
-				int l = (int) Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff + zDiff * zDiff) * 100.0f);
-				if (l > 0) addExhaustion(player, 0.01f * (float) l * 0.01f);
+				double swimDistance = Math.sqrt(xDiff * xDiff + yDiff * yDiff + zDiff * zDiff);
+				if (swimDistance > 0) {
+					addExhaustion(player, 0.01f * (float) swimDistance);
+				}
 			}
 		}
 	}
