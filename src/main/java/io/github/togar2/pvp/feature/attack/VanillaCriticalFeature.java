@@ -3,9 +3,12 @@ package io.github.togar2.pvp.feature.attack;
 import io.github.togar2.pvp.feature.FeatureType;
 import io.github.togar2.pvp.feature.config.DefinedFeature;
 import io.github.togar2.pvp.feature.config.FeatureConfiguration;
+import io.github.togar2.pvp.feature.fall.VanillaFallFeature;
 import io.github.togar2.pvp.feature.state.PlayerStateFeature;
 import io.github.togar2.pvp.utils.CombatVersion;
+import io.github.togar2.pvp.utils.FluidUtil;
 import net.minestom.server.entity.LivingEntity;
+import net.minestom.server.entity.Player;
 import net.minestom.server.potion.PotionEffect;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -36,13 +39,19 @@ public class VanillaCriticalFeature implements CriticalFeature {
 	
 	@Override
 	public boolean shouldCrit(LivingEntity attacker, AttackValues.PreCritical values) {
+		double fallDistance = attacker.hasTag(VanillaFallFeature.FALL_DISTANCE)
+				? attacker.getTag(VanillaFallFeature.FALL_DISTANCE) : 0;
+		boolean inWater = attacker instanceof Player player && FluidUtil.isTouchingWater(player);
+		boolean mobilityRestricted = attacker.hasEffect(PotionEffect.BLINDNESS)
+				|| attacker.hasEffect(PotionEffect.SLOW_FALLING)
+				|| attacker.hasEffect(PotionEffect.LEVITATION);
+
 		boolean critical = values.strong() && !playerStateFeature.isClimbing(attacker)
-				&& attacker.getVelocity().y() < 0 && !attacker.isOnGround()
-				&& !attacker.hasEffect(PotionEffect.BLINDNESS)
+				&& fallDistance > 0 && !attacker.isOnGround()
+				&& !inWater && !mobilityRestricted
 				&& attacker.getVehicle() == null;
 		if (version.legacy()) return critical;
-		
-		// Not sprinting required for critical in 1.9+
+
 		return critical && !attacker.isSprinting();
 	}
 	
