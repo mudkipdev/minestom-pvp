@@ -1,9 +1,13 @@
 package io.github.togar2.pvp.enchantment;
 
+import io.github.togar2.pvp.enchantment.enchantments.BreachEnchantment;
 import io.github.togar2.pvp.enchantment.enchantments.DamageEnchantment;
+import io.github.togar2.pvp.enchantment.enchantments.DensityEnchantment;
 import io.github.togar2.pvp.enchantment.enchantments.ImpalingEnchantment;
+import io.github.togar2.pvp.enchantment.enchantments.LungeEnchantment;
 import io.github.togar2.pvp.enchantment.enchantments.ProtectionEnchantment;
 import io.github.togar2.pvp.enchantment.enchantments.ThornsEnchantment;
+import io.github.togar2.pvp.enchantment.enchantments.WindBurstEnchantment;
 import io.github.togar2.pvp.feature.FeatureType;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.item.enchant.Enchantment;
@@ -86,6 +90,10 @@ public class CombatEnchantments {
 				new CombatEnchantment(Enchantment.MULTISHOT, EquipmentSlot.MAIN_HAND),
 				new CombatEnchantment(Enchantment.QUICK_CHARGE, EquipmentSlot.MAIN_HAND),
 				new CombatEnchantment(Enchantment.PIERCING, EquipmentSlot.MAIN_HAND),
+				new BreachEnchantment(EquipmentSlot.MAIN_HAND),
+				new DensityEnchantment(EquipmentSlot.MAIN_HAND),
+				new WindBurstEnchantment(EquipmentSlot.MAIN_HAND),
+				new LungeEnchantment(EquipmentSlot.MAIN_HAND),
 				new CombatEnchantment(Enchantment.MENDING, EquipmentSlot.values()),
 				new CombatEnchantment(Enchantment.VANISHING_CURSE, EquipmentSlot.values())
 		);

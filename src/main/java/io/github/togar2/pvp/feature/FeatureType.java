@@ -24,9 +24,11 @@ import io.github.togar2.pvp.feature.potion.PotionFeature;
 import io.github.togar2.pvp.feature.projectile.*;
 import io.github.togar2.pvp.feature.provider.DifficultyProvider;
 import io.github.togar2.pvp.feature.spectate.SpectateFeature;
+import io.github.togar2.pvp.feature.spear.SpearFeature;
 import io.github.togar2.pvp.feature.state.PlayerStateFeature;
 import io.github.togar2.pvp.feature.totem.TotemFeature;
 import io.github.togar2.pvp.feature.tracking.TrackingFeature;
+import io.github.togar2.pvp.feature.weapon.MaceFeature;
 import io.github.togar2.pvp.utils.CombatVersion;
 
 /**
@@ -70,7 +72,9 @@ public record FeatureType<F extends CombatFeature>(String name, F defaultFeature
 	public static final FeatureType<PlayerStateFeature> PLAYER_STATE = of("PLAYER_STATE", PlayerStateFeature.NO_OP);
 	public static final FeatureType<TotemFeature> TOTEM = of("TOTEM", TotemFeature.NO_OP);
 	public static final FeatureType<TrackingFeature> TRACKING = of("TRACKING", TrackingFeature.NO_OP);
-	
+	public static final FeatureType<MaceFeature> MACE = of("MACE", MaceFeature.NO_OP);
+	public static final FeatureType<SpearFeature> SPEAR = of("SPEAR", SpearFeature.NO_OP);
+
 	public static <F extends CombatFeature> FeatureType<F> of(String name, F noopFeature) {
 		return new FeatureType<>(name, noopFeature);
 	}

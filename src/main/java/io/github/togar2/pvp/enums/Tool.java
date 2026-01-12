@@ -55,11 +55,16 @@ public enum Tool {
 	
 	// We don't know the legacy attack damage for tridents, since they didn't exist
 	// 5.0 seems to be balanced
-	TRIDENT(null, 8.0F, 5.0F, -2.9F);
+	TRIDENT(null, 8.0F, 5.0F, -2.9F),
+
+	// Mace (1.21+) - Base damage 5.0 (5.0 + 1.0 from base), attack speed -3.4
+	// Legacy damage same as modern since mace didn't exist in legacy
+	MACE(null, 5.0F, 5.0F, -3.4F, false, false, true);
 	
 	private final Material material;
 	private boolean isAxe = false;
 	private boolean isSword = false;
+	private boolean isMace = false;
 	
 	private final Map<Attribute, AttributeModifier> attributeModifiers = new HashMap<>();
 	private final Map<Attribute, AttributeModifier> legacyAttributeModifiers = new HashMap<>();
@@ -79,6 +84,13 @@ public enum Tool {
 		this(toolMaterial, attackDamage, legacyAttackDamage, attackSpeed);
 		this.isAxe = isAxe;
 		this.isSword = isSword;
+	}
+
+	Tool(@Nullable ToolMaterial toolMaterial, float attackDamage, float legacyAttackDamage, float attackSpeed, boolean isAxe, boolean isSword, boolean isMace) {
+		this(toolMaterial, attackDamage, legacyAttackDamage, attackSpeed);
+		this.isAxe = isAxe;
+		this.isSword = isSword;
+		this.isMace = isMace;
 	}
 	
 	public static void updateEquipmentAttributes(LivingEntity entity, ItemStack oldStack, ItemStack newStack,
@@ -113,6 +125,10 @@ public enum Tool {
 	
 	public boolean isSword() {
 		return isSword;
+	}
+
+	public boolean isMace() {
+		return isMace;
 	}
 	
 	public static Tool fromMaterial(Material material) {

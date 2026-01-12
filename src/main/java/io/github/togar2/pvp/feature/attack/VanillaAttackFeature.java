@@ -13,6 +13,7 @@ import io.github.togar2.pvp.feature.enchantment.EnchantmentFeature;
 import io.github.togar2.pvp.feature.food.ExhaustionFeature;
 import io.github.togar2.pvp.feature.item.ItemDamageFeature;
 import io.github.togar2.pvp.feature.knockback.KnockbackFeature;
+import io.github.togar2.pvp.feature.weapon.MaceFeature;
 import io.github.togar2.pvp.player.CombatPlayer;
 import io.github.togar2.pvp.utils.CombatVersion;
 import io.github.togar2.pvp.utils.ViewUtil;
@@ -46,7 +47,7 @@ public class VanillaAttackFeature implements AttackFeature, RegistrableFeature {
 	public static final DefinedFeature<VanillaAttackFeature> DEFINED = new DefinedFeature<>(
 		FeatureType.ATTACK, VanillaAttackFeature::new,
 		FeatureType.ATTACK_COOLDOWN, FeatureType.EXHAUSTION, FeatureType.ITEM_DAMAGE,
-		FeatureType.ENCHANTMENT, FeatureType.CRITICAL, FeatureType.SWEEPING, FeatureType.KNOCKBACK, FeatureType.VERSION
+		FeatureType.ENCHANTMENT, FeatureType.CRITICAL, FeatureType.SWEEPING, FeatureType.KNOCKBACK, FeatureType.MACE, FeatureType.VERSION
 	);
 
 	private static final double ATTACK_RANGE_MARGIN = 3.0;
@@ -61,6 +62,7 @@ public class VanillaAttackFeature implements AttackFeature, RegistrableFeature {
 	private CriticalFeature criticalFeature;
 	private SweepingFeature sweepingFeature;
 	private KnockbackFeature knockbackFeature;
+	private MaceFeature maceFeature;
 
 	private CombatVersion version;
 
@@ -77,6 +79,7 @@ public class VanillaAttackFeature implements AttackFeature, RegistrableFeature {
 		this.criticalFeature = configuration.get(FeatureType.CRITICAL);
 		this.sweepingFeature = configuration.get(FeatureType.SWEEPING);
 		this.knockbackFeature = configuration.get(FeatureType.KNOCKBACK);
+		this.maceFeature = configuration.get(FeatureType.MACE);
 		this.version = configuration.get(FeatureType.VERSION);
 	}
 
@@ -125,6 +128,13 @@ public class VanillaAttackFeature implements AttackFeature, RegistrableFeature {
 		// Target is always living now, because the damage would not have succeeded if it wasn't
 		LivingEntity living = (LivingEntity) target;
 		Collection<LivingEntity> affectedEntities = List.of(living);
+
+		// Handle mace smash attack
+		Tool tool = Tool.fromMaterial(attacker.getItemInMainHand().material());
+		boolean maceSmash = tool != null && tool.isMace() && maceFeature.canSmashAttack(attacker);
+		if (maceSmash) {
+			maceFeature.applySmashAttackEffects(attacker, target);
+		}
 
 		// Knockback and sweeping
 		knockbackFeature.applyAttackKnockback(attacker, living, attack.knockback());
@@ -187,10 +197,14 @@ public class VanillaAttackFeature implements AttackFeature, RegistrableFeature {
 			}
 		}
 
-		// Damage item
-		Tool tool = Tool.fromMaterial(attacker.getItemInMainHand().material());
+		// Damage item (mace, swords, and trident take 1 durability)
 		if (tool != null) itemDamageFeature.damageEquipment(attacker, EquipmentSlot.MAIN_HAND,
-			(tool.isSword() || tool == Tool.TRIDENT) ? 1 : 2);
+			(tool.isSword() || tool == Tool.TRIDENT || tool.isMace()) ? 1 : 2);
+
+		// Mace post-attack handling (reset fall distance and stop downward motion)
+		if (maceSmash) {
+			maceFeature.postSmashAttack(attacker);
+		}
 
 		// Damage indicator particles
 		float damageDone = originalHealth - living.getHealth();
@@ -264,6 +278,12 @@ public class VanillaAttackFeature implements AttackFeature, RegistrableFeature {
 		// Apply critical damage and knockback
 		if (critical) damage = criticalFeature.applyToDamage(damage);
 		damage += magicalDamage;
+
+		// Add mace bonus damage from fall distance
+		Tool weapon = Tool.fromMaterial(attacker.getItemInMainHand().material());
+		if (weapon != null && weapon.isMace()) {
+			damage += maceFeature.getBonusDamage(attacker);
+		}
 
 		if (sprintAttack) knockback++;
 

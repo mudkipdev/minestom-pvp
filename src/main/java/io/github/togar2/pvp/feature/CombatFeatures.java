@@ -28,9 +28,11 @@ import io.github.togar2.pvp.feature.potion.VanillaPotionFeature;
 import io.github.togar2.pvp.feature.projectile.*;
 import io.github.togar2.pvp.feature.provider.DifficultyProvider;
 import io.github.togar2.pvp.feature.spectate.VanillaSpectateFeature;
+import io.github.togar2.pvp.feature.spear.VanillaSpearFeature;
 import io.github.togar2.pvp.feature.state.VanillaPlayerStateFeature;
 import io.github.togar2.pvp.feature.totem.VanillaTotemFeature;
 import io.github.togar2.pvp.feature.tracking.VanillaDeathMessageFeature;
+import io.github.togar2.pvp.feature.weapon.VanillaMaceFeature;
 import io.github.togar2.pvp.utils.CombatVersion;
 
 import java.util.List;
@@ -164,7 +166,15 @@ public class CombatFeatures {
 	 * @see VanillaDeathMessageFeature
 	 */
 	public static final DefinedFeature<VanillaDeathMessageFeature> VANILLA_DEATH_MESSAGE = VanillaDeathMessageFeature.DEFINED;
-	
+	/**
+	 * @see VanillaMaceFeature
+	 */
+	public static final DefinedFeature<VanillaMaceFeature> VANILLA_MACE = VanillaMaceFeature.DEFINED;
+	/**
+	 * @see VanillaSpearFeature
+	 */
+	public static final DefinedFeature<VanillaSpearFeature> VANILLA_SPEAR = VanillaSpearFeature.DEFINED;
+
 	/**
 	 * @see LegacyVanillaBlockFeature
 	 */
@@ -187,7 +197,7 @@ public class CombatFeatures {
 			VANILLA_REGENERATION, VANILLA_ITEM_DAMAGE, VANILLA_KNOCKBACK, VANILLA_POTION,
 			VANILLA_BOW, VANILLA_CROSSBOW, VANILLA_FISHING_ROD, VANILLA_MISC_PROJECTILE,
 			VANILLA_PROJECTILE_ITEM, VANILLA_TRIDENT, VANILLA_SPECTATE, VANILLA_PLAYER_STATE,
-			VANILLA_TOTEM, VANILLA_DEATH_MESSAGE
+			VANILLA_TOTEM, VANILLA_DEATH_MESSAGE, VANILLA_MACE, VANILLA_SPEAR
 	);
 	
 	private static final CombatFeatureSet MODERN_VANILLA = getVanilla(CombatVersion.MODERN, DifficultyProvider.DEFAULT).build();
