@@ -8,6 +8,7 @@ import net.minestom.server.ServerFlag;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.*;
+import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.entity.damage.DamageType;
 import net.minestom.server.entity.metadata.projectile.AbstractArrowMeta;
@@ -180,15 +181,17 @@ public abstract class AbstractArrow extends CustomEntityProjectile {
 			}
 			
 			if (knockback > 0) {
+				double resistance = Math.max(0.0, 1.0 - living.getAttributeValue(Attribute.KNOCKBACK_RESISTANCE));
 				Vec knockbackVec = getVelocity()
 						.mul(1, 0, 1)
-						.normalize().mul(knockback * 0.6);
-				knockbackVec = knockbackVec.add(0, 0.1, 0)
-						.mul(ServerFlag.SERVER_TICKS_PER_SECOND / 2.0);
-				
+						.normalize().mul(knockback * 0.6 * resistance);
+
 				if (knockbackVec.lengthSquared() > 0) {
-					Vec newVel = living.getVelocity().add(knockbackVec);
-					living.setVelocity(newVel);
+					living.setVelocity(living.getVelocity().add(
+							knockbackVec.x() * ServerFlag.SERVER_TICKS_PER_SECOND,
+							0.1 * ServerFlag.SERVER_TICKS_PER_SECOND,
+							knockbackVec.z() * ServerFlag.SERVER_TICKS_PER_SECOND
+					));
 				}
 			}
 			
