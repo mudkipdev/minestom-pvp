@@ -53,8 +53,7 @@ public class ThrownTrident extends AbstractArrow {
 				setNoGravity(true);
 				Vec vector = shooter.getPosition().add(0, shooter.getEyeHeight(), 0).asVec().sub(position);
 				refreshPosition(position.add(0, vector.y() * 0.015 * loyalty, 0));
-				setVelocity(velocity.mul(0.95).add(vector.normalize().mul(0.05 * loyalty)
-						.mul(ServerFlag.SERVER_TICKS_PER_SECOND)));
+				setVelocity(velocity.mul(0.95).add(vector.normalize().mul(0.05 * loyalty)));
 				
 				if (!hasStartedReturning) {
 					getViewersAsAudience().playSound(Sound.sound(
