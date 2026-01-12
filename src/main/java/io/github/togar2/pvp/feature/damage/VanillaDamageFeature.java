@@ -138,14 +138,14 @@ public class VanillaDamageFeature implements DamageFeature, RegistrableFeature {
 		// Invulnerability ticks
 		boolean hurtSoundAndAnimation = true;
 		long newDamageTime = entity.hasTag(NEW_DAMAGE_TIME) ? entity.getTag(NEW_DAMAGE_TIME) : -10000;
-		if (entity.getAliveTicks() - newDamageTime < 0) {
+		if (!typeInfo.bypassesCooldown() && entity.getAliveTicks() - newDamageTime < 0) {
 			float lastDamage = entity.hasTag(LAST_DAMAGE_AMOUNT) ? entity.getTag(LAST_DAMAGE_AMOUNT) : 0;
-			
+
 			if (amount <= lastDamage) {
 				event.setCancelled(true);
 				return;
 			}
-			
+
 			hurtSoundAndAnimation = false;
 			amount = amount - lastDamage;
 		}

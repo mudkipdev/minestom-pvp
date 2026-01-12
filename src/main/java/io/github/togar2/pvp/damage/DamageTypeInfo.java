@@ -13,14 +13,14 @@ import java.util.Map;
 public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boolean outOfWorld,
                              boolean unblockable, boolean fire, ScaleWithDifficulty scaleWithDifficulty,
                              boolean magic, boolean explosive, boolean fall, boolean thorns, boolean projectile,
-                             boolean freeze) {
+                             boolean freeze, boolean bypassesCooldown) {
 	private static final DamageTypeInfo DEFAULT = new DamageTypeInfo();
 
 	public DamageTypeInfo() {
 		this(
 				false, false, false,
 				false, false, ScaleWithDifficulty.NEVER,
-				false, false, false, false, false, false
+				false, false, false, false, false, false, false
 		);
 	}
 
@@ -31,26 +31,26 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 	//TODO check source and add missing
 	public static final Map<RegistryKey<DamageType>, DamageTypeInfo> INFO_MAP = new HashMap<>() {
 		{
-			put(DamageType.IN_FIRE, new DamageTypeInfo().bypassesArmor(true).fire(true));
-			put(DamageType.ON_FIRE, new DamageTypeInfo().bypassesArmor(true).fire(true));
-			put(DamageType.LAVA, new DamageTypeInfo().fire(true));
-			put(DamageType.HOT_FLOOR, new DamageTypeInfo().fire(true));
-			put(DamageType.IN_WALL, new DamageTypeInfo().bypassesArmor(true));
-			put(DamageType.CRAMMING, new DamageTypeInfo().bypassesArmor(true));
-			put(DamageType.DROWN, new DamageTypeInfo().bypassesArmor(true));
-			put(DamageType.STARVE, new DamageTypeInfo().bypassesArmor(true).unblockable(true));
+			put(DamageType.IN_FIRE, new DamageTypeInfo().bypassesArmor(true).fire(true).bypassesCooldown(true));
+			put(DamageType.ON_FIRE, new DamageTypeInfo().bypassesArmor(true).fire(true).bypassesCooldown(true));
+			put(DamageType.LAVA, new DamageTypeInfo().fire(true).bypassesCooldown(true));
+			put(DamageType.HOT_FLOOR, new DamageTypeInfo().fire(true).bypassesCooldown(true));
+			put(DamageType.IN_WALL, new DamageTypeInfo().bypassesArmor(true).bypassesCooldown(true));
+			put(DamageType.CRAMMING, new DamageTypeInfo().bypassesArmor(true).bypassesCooldown(true));
+			put(DamageType.DROWN, new DamageTypeInfo().bypassesArmor(true).bypassesCooldown(true));
+			put(DamageType.STARVE, new DamageTypeInfo().bypassesArmor(true).unblockable(true).bypassesCooldown(true));
 			put(DamageType.FALL, new DamageTypeInfo().bypassesArmor(true).fall(true));
 			put(DamageType.FLY_INTO_WALL, new DamageTypeInfo().bypassesArmor(true));
-			put(DamageType.OUT_OF_WORLD, new DamageTypeInfo().bypassesArmor(true).outOfWorld(true));
-			put(DamageType.GENERIC, new DamageTypeInfo().bypassesArmor(true));
-			put(DamageType.GENERIC_KILL, new DamageTypeInfo().bypassesArmor(true));
+			put(DamageType.OUT_OF_WORLD, new DamageTypeInfo().bypassesArmor(true).outOfWorld(true).bypassesCooldown(true));
+			put(DamageType.GENERIC, new DamageTypeInfo().bypassesArmor(true).bypassesCooldown(true));
+			put(DamageType.GENERIC_KILL, new DamageTypeInfo().bypassesArmor(true).bypassesCooldown(true));
 			put(DamageType.MAGIC, new DamageTypeInfo().bypassesArmor(true).magic(true));
 			put(DamageType.INDIRECT_MAGIC, new DamageTypeInfo().bypassesArmor(true).magic(true).scale(ScaleWithDifficulty.WHEN_CAUSED_BY_LIVING_NON_PLAYER));
-			put(DamageType.WITHER, new DamageTypeInfo().bypassesArmor(true));
+			put(DamageType.WITHER, new DamageTypeInfo().bypassesArmor(true).bypassesCooldown(true));
 			put(DamageType.FALLING_ANVIL, new DamageTypeInfo().damagesHelmet(true));
 			put(DamageType.FALLING_BLOCK, new DamageTypeInfo().damagesHelmet(true));
 			put(DamageType.DRAGON_BREATH, new DamageTypeInfo().bypassesArmor(true));
-			put(DamageType.FREEZE, new DamageTypeInfo().freeze(true).bypassesArmor(true));
+			put(DamageType.FREEZE, new DamageTypeInfo().freeze(true).bypassesArmor(true).bypassesCooldown(true));
 			put(DamageType.FALLING_STALACTITE, new DamageTypeInfo().damagesHelmet(true));
 			put(DamageType.STALAGMITE, new DamageTypeInfo().bypassesArmor(true).fall(true));
 			put(DamageType.THORNS, new DamageTypeInfo().magic(true).thorns(true).scale(ScaleWithDifficulty.WHEN_CAUSED_BY_LIVING_NON_PLAYER));
@@ -78,7 +78,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -87,7 +87,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -96,7 +96,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -105,7 +105,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -114,7 +114,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -123,7 +123,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scale,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -132,7 +132,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -141,7 +141,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -150,7 +150,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -159,7 +159,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -168,7 +168,7 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
 		);
 	}
 
@@ -177,7 +177,16 @@ public record DamageTypeInfo(boolean damagesHelmet, boolean bypassesArmor, boole
 				damagesHelmet, bypassesArmor, outOfWorld,
 				unblockable, fire, scaleWithDifficulty,
 				magic, explosive, fall, thorns, projectile,
-				freeze
+				freeze, bypassesCooldown
+		);
+	}
+
+	public DamageTypeInfo bypassesCooldown(boolean bypassesCooldown) {
+		return new DamageTypeInfo(
+				damagesHelmet, bypassesArmor, outOfWorld,
+				unblockable, fire, scaleWithDifficulty,
+				magic, explosive, fall, thorns, projectile,
+				freeze, bypassesCooldown
 		);
 	}
 
