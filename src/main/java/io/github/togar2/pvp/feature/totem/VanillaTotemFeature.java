@@ -28,7 +28,7 @@ public class VanillaTotemFeature implements TotemFeature {
 	
 	@Override
 	public boolean tryProtect(LivingEntity entity, DamageType type) {
-		if (DamageTypeInfo.of(MinecraftServer.getDamageTypeRegistry().getKey(type)).outOfWorld()) return false;
+		if (DamageTypeInfo.of(MinecraftServer.getDamageTypeRegistry().getKey(type)).bypassesInvulnerability()) return false;
 		
 		DeathProtection deathProtection = null;
 		for (PlayerHand hand : PlayerHand.values()) {
